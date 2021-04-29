@@ -18,7 +18,7 @@ class Occupations extends Migration
             $table->string('title');
             $table->tinytext('description');
             $table->unsignedInteger('salary');
-            $table->boolean('can_hire_others');
+            $table->boolean('can_hire_others')->default(false);
             $table->timestamps();
         });
     }
