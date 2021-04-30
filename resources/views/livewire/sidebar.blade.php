@@ -2,9 +2,14 @@
     <h1 class="text-2xl font-bold">Character</h1>
 
     <h2 class="text-lg font-semibold">Occupation</h2>
-
     <div class="inline">
-        <h3>Salary: {placeholder}</h3>
+        @if($occupation != null)
+            <h3>{{$occupation}}</h3>
+            <p>Salary: {{$occupation->salary}}</p>
+        @else
+            <h3>Unemployed</h3>
+            <p>Salary: $0</p>
+        @endif
     </div>
 
     <br>
