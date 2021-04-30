@@ -18,6 +18,8 @@ class UpdateUserTable extends Migration
             $table->unsignedTinyInteger('intelligence');
             $table->unsignedTinyInteger('fitness');
             $table->unsignedTinyInteger('charisma');
+            $table->unsignedTinyInteger('current_energy')->default(20);
+            $table->unsignedTinyInteger('max_energy')->default(20);
         });
     }
 
@@ -29,7 +31,7 @@ class UpdateUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['money', 'intelligence', 'fitness', 'charisma']);
+            $table->dropColumn(['money', 'intelligence', 'fitness', 'charisma', 'current_energy', 'max_energy']);
         });
     }
 }
