@@ -11,11 +11,11 @@
 
     <h2 class="text-lg font-semibold">Stats</h2>
     <div>
-        <h3>Energy: {placeholder}</h3> <!--Replace with bar-->
-        <h3>Money: {placeholder}</h3>
-        <h3>Intelligence: {placeholder}</h3>
-        <h3>Fitness: {placeholder}</h3>
-        <h3>Charisma: {placeholder}</h3>
+        <h3>Energy: {{$user->current_energy}}/{{$user->max_energy}}</h3> <!--Replace with bar-->
+        <h3>Money: {{$user->money}}</h3>
+        <h3>Intelligence: {{$user->intelligence}}</h3>
+        <h3>Fitness: {{$user->fitness}}</h3>
+        <h3>Charisma: {{$user->charisma}}</h3>
     </div>
 
     <br>
