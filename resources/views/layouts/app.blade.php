@@ -21,13 +21,13 @@
         <div class="min-h-screen">
             @livewire('navigation-menu')
 
-            <div class="grid grid-cols-5 min-h-screen">
+            <div class="grid sm:grid-cols-5 grid-cols-3 min-h-screen">
                 <!-- Sidebar -->
                 @livewire('sidebar')
                
 
                 <!-- Page Content -->
-                <div class="col-span-4 relative">
+                <div class="sm:col-span-4 col-span-2 relative text-center">
                     <!-- Page Heading -->
                     @if (isset($header))
                         <header class="shadow">

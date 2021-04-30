@@ -1,4 +1,4 @@
-<section class="flex flex-col items-center border-r border-black h-full">
+<section class="flex flex-col items-center text-center border-r border-black h-full">
     <h1 class="text-2xl font-bold">Character</h1>
 
     <h2 class="text-lg font-semibold">Occupation</h2>
