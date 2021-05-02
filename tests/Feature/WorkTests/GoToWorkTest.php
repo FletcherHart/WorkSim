@@ -37,4 +37,18 @@ class GoToWorkTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /**
+     * Assert unemployed user sees "You are currently unemployed. Please click the button below to look for jobs."
+     *
+     * @return void
+     */
+    public function test_unemployed_user_sees_notice()
+    {
+        $this->actingAs($user = User::factory()->create());
+
+        $response = $this->get('/work');
+
+        $response->assertSee("You are currently unemployed. Please click the button below to look for jobs.");
+    }
 }
