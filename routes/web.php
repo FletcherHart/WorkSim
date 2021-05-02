@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Work;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/work', [Work::class, 'render'])->name('work');
