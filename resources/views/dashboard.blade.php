@@ -9,16 +9,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden grid grid-cols-2">
                 <article class="col-span-1 flex flex-col items-center">
-                    <h2 class="text-lg font-semibold">{Placeholder title}</h2>
-                    <h3>{placeholder}</h3>
+                    <h2 class="text-lg font-semibold">Work</h2>
+                    <a href="#" class="bg-blue-600 p-2 text-white">Go to work</a>
                     <br>
-                    <h3>{placeholder}</h3>
+                    <a href="#" class="bg-blue-600 p-2 text-white">Find a new job</a>
                 </article>
                 <article class="col-span-1 flex flex-col items-center">
-                    <h2 class="text-lg font-semibold">{Placeholder title}</h2>
-                    <h3>{placeholder}</h3>
+                    <h2 class="text-lg font-semibold">Education</h2>
+                    <a href="#" class="bg-blue-600 p-2 text-white">Go to class</a>
                     <br>
-                    <h3>{placeholder}</h3>
+                    <a href="#" class="bg-blue-600 p-2 text-white">Enroll</a>
                 </article>
             </div>
         </div>
