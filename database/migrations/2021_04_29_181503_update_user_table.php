@@ -14,10 +14,10 @@ class UpdateUserTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('money');
-            $table->unsignedTinyInteger('intelligence');
-            $table->unsignedTinyInteger('fitness');
-            $table->unsignedTinyInteger('charisma');
+            $table->unsignedBigInteger('money')->default(0);
+            $table->unsignedTinyInteger('intelligence')->default(1);
+            $table->unsignedTinyInteger('fitness')->default(1);
+            $table->unsignedTinyInteger('charisma')->default(1);
             $table->unsignedTinyInteger('current_energy')->default(20);
             $table->unsignedTinyInteger('max_energy')->default(20);
         });
