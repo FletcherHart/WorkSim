@@ -13,7 +13,7 @@ class CreateCompanyJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_jobs', function (Blueprint $table) {
+        Schema::create('company_occupation', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')
                 ->constrained('companies')
