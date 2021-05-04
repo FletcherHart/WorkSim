@@ -32,6 +32,10 @@ class CreateCompanyJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_jobs');
+        Schema::table('company_occupation', function (Blueprint $table) {
+            $table->dropForeign(['company_id']);
+            $table->dropForeign(['occupation_id']);
+        });
+        Schema::dropIfExists('company_occupation');
     }
 }
