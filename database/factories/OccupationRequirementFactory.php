@@ -22,8 +22,8 @@ class OccupationRequirementFactory extends Factory
     public function definition()
     {
         return [
-            'stat' => rand_array(['none', 'intelligence', 'charisma', 'fitness'], 1),
-            'stat_req' => $this->$this->faker->numberBetween(1, 255),
+            'stat' => array_rand(['none', 'intelligence', 'charisma', 'fitness'], 1),
+            'stat_req' => $this->faker->numberBetween(1, 255),
         ];
     }
 }
