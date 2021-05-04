@@ -22,7 +22,7 @@ class CompanyFactory extends Factory
     public function definition()
     {
         return [
-            'company_name' => $this->faker->sentence(),
+            'company_name' => $this->faker->company(),
             'max_employees' => 10
         ];
     }
