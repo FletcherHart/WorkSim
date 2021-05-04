@@ -13,4 +13,14 @@ class Occupation extends Model
     {
         return $this->belongsToMany(Company::class);
     }
+
+    public function degree()
+    {
+        return $this->belongsTo(Degree::class);
+    }
+
+    public function occupationRequirements()
+    {
+        return $this->hasMany(OccupationRequirement::class);
+    }
 }
