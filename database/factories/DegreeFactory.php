@@ -24,7 +24,7 @@ class DegreeFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->bs(),
-            'experience_req' => $this->faker->numberBetween(10, 500),
+            'experience_req' => $this->faker->numberBetween(10, 255),
         ];
     }
 }
