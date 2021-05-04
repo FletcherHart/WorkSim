@@ -10,9 +10,9 @@
             <div class="overflow-hidden grid grid-cols-2">
                 <article class="col-span-1 flex flex-col items-center">
                     <h2 class="text-lg font-semibold">Work</h2>
-                    <a href="#" class="bg-blue-600 p-2 text-white">Go to work</a>
+                    <a href="/work" class="bg-blue-600 p-2 text-white">Go to work</a>
                     <br>
-                    <a href="#" class="bg-blue-600 p-2 text-white">Find a new job</a>
+                    <a href="/employment" class="bg-blue-600 p-2 text-white">Find a new job</a>
                 </article>
                 <article class="col-span-1 flex flex-col items-center">
                     <h2 class="text-lg font-semibold">Education</h2>
