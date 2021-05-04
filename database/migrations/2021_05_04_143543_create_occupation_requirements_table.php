@@ -15,7 +15,7 @@ class CreateOccupationRequirementsTable extends Migration
     {
         Schema::create('occupation_requirements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('occupation_id')->nullable()
+            $table->foreignId('occupation_id')
                 ->constrained('occupations')
                 ->onDelete('cascade');
             $table->string('stat')->default('none');
