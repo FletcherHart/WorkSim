@@ -21,6 +21,7 @@ class CreateOccupationRequirementsTable extends Migration
             $table->string('stat')->default('none');
             $table->unsignedTinyInteger('stat_req')->default(1);
             $table->timestamps();
+            $table->unique(['occupation_id', 'stat']);
         });
     }
 
