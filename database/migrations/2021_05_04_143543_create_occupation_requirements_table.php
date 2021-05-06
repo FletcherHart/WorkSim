@@ -18,10 +18,11 @@ class CreateOccupationRequirementsTable extends Migration
             $table->foreignId('occupation_id')
                 ->constrained('occupations')
                 ->onDelete('cascade');
-            $table->string('stat')->default('none');
-            $table->unsignedTinyInteger('stat_req')->default(1);
+            $table->unsignedTinyInteger('intelligence')->default(0);
+            $table->unsignedTinyInteger('fitness')->default(0);
+            $table->unsignedTinyInteger('charisma')->default(0);
             $table->timestamps();
-            $table->unique(['occupation_id', 'stat']);
+            $table->unique(['occupation_id']);
         });
     }
 
