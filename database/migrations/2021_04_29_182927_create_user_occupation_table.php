@@ -22,6 +22,7 @@ class CreateUserOccupationTable extends Migration
                 ->constrained('occupations')
                 ->onDelete('cascade');
             $table->timestamps();
+            $table->unique(['user_id', 'occupation_id']);
         });
     }
 
