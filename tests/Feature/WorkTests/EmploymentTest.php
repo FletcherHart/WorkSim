@@ -9,6 +9,7 @@ use App\Models\OccupationRequirement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Livewire;
 use Tests\TestCase;
 
 class EmploymentTest extends TestCase
@@ -100,8 +101,29 @@ class EmploymentTest extends TestCase
      */
     public function test_user_can_apply_to_a_job() {
         $this->actingAs($user = User::factory()->create());
-        $response = $this->get('/apply/' . $this->occupations[0]->id);
+        Livewire::test('apply', ['id' => 1])->assertViewIs('livewire.apply');
+    }
 
-        $response->assertViewIs('livewire.apply');
+    
+    /**
+     * Assert a user who qualifies for an NPC occupation automatically gets it.
+     * Also assert that said user is properly notified.
+     * @return void
+     */
+    public function test_qualifying_user_auto_gets_npc_job() {
+        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+
+        //Get & modify first existing occupation which is guaranteed to exist due to setup()
+        $occupation = Occupation::where('id', 1)->first();
+
+        $reqs = OccupationRequirement::where('id', $occupation->id)->first();
+        $reqs->charisma = 5;
+        $reqs->fitness = 5;
+        $reqs->intelligence = 5;
+        $reqs->save();
+
+        //$response = $this->get('/apply/' . $occupation->id);
+        Livewire::test('apply', ['id' => 1])->assertSet('result', true);
+        $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
     }
 }
