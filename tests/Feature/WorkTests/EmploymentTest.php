@@ -92,4 +92,16 @@ class EmploymentTest extends TestCase
             $response->assertSee('Intelligence: ' . $req->intelligence);
         }
     }
+
+    /**
+     * Assert a user can apply to a job & gets relavent Livewire page
+     *
+     * @return void
+     */
+    public function test_user_can_apply_to_a_job() {
+        $this->actingAs($user = User::factory()->create());
+        $response = $this->get('/apply/' . $this->occupations[0]->id);
+
+        $response->assertViewIs('livewire.apply');
+    }
 }
