@@ -21,16 +21,14 @@ class DatabaseSeeder extends Seeder
 
         foreach($jobs as $job) {
             $job->companies()->attach($companies[rand(0, 4)]->id);
-            for($i = 0; $i<rand(0, 3); $i++) {
                 //Get if exists, create new otherwise
                 $req = \App\Models\OccupationRequirement::firstOrNew([
-                    'occupation_id' => $job->id, 
-                    'stat' => $stats[array_rand($stats, 1)],
+                    'occupation_id' => $job->id,
+                    'charisma' => rand(0, 255),
+                    'intelligence' => rand(0, 255),
+                    'fitness' => rand(0, 255),
                 ]);
-                //Technically might overwrite stat_req but it doesn't matter
-                $req->stat_req = rand(1, 255);
                 $req->save();
-            }
         }
 
         foreach($degrees as $degree) {
