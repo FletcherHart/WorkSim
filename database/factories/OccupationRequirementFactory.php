@@ -21,10 +21,10 @@ class OccupationRequirementFactory extends Factory
      */
     public function definition()
     {
-        $stats = ['Intelligence', 'Charisma', 'Fitness'];
         return [
-            'stat' => $stats[array_rand($stats, 1)],
-            'stat_req' => $this->faker->numberBetween(1, 255),
+            'charisma' => $this->faker->numberBetween(0, 255),
+            'intelligence' => $this->faker->numberBetween(0, 255),
+            'fitness' => $this->faker->numberBetween(0, 255),
         ];
     }
 }
