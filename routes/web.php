@@ -28,4 +28,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/work', [Work::class, 'ren
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/employment', [Employment::class, 'render'])->name('employment');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/apply/{id}', [Apply::class, 'render'])->name('apply');
+Route::middleware(['auth:sanctum', 'verified'])->get('/apply/{id}', Apply::class)->name('apply');
