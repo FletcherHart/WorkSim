@@ -7,13 +7,27 @@
 
     <section class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex flex-col items-center">
+            <div class="grid grid-cols-1 gap-4 items-center">
                 @foreach($occupations as $occupation)
-                    <div class="flex w-full border-black border-left border-right border-top">
-                            <div class="font-bold">{{$occupation->title}}</div>
-                            <div class="">{{$occupation->description}}</div>
-                            {{$occupation->salary}}
-                            {{$occupation->company_name}}
+                    <div class="flex flex-col w-full border border-black border-left border-right border-top h-auto min-h-full text-left text-sm p-1">
+                        <div class="flex justify-between">
+                            <div class="font-bold text-base">{{$occupation->title}}</div>
+                            <p>Salary: {{$occupation->salary}}</p>
+                        </div>
+                        <div class="text-green-700 text-sm">{{$occupation->company_name}}</div>
+                        <div class="">{{$occupation->description}}</div>
+                        
+                        <p class="font-semibold">Requirements:</p>
+                            @if($occupation->degree == null)
+                                <p>Degree: None</p>
+                            @else
+                                <p>Degree: {{$occupation->degree}}</p>
+                            @endif
+                        <div class="flex">
+                            <p class="pr-2 border-r border-black">Charisma: {{$occupation->charisma}}</p>
+                            <p class="pl-2 pr-2 border-r border-black">Intelligence: {{$occupation->intelligence}}</p>
+                            <p class="pl-2">Fitness: {{$occupation->fitness}}</p>
+                        </div>
                     </div>
                 @endforeach
                 
