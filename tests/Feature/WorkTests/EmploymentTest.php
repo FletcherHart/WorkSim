@@ -79,16 +79,17 @@ class EmploymentTest extends TestCase
             array_push($degrees, Degree::where('id', $occupation->degree_id)->first());
             array_push($occupation_reqs, OccupationRequirement::where('occupation_id', $occupation->id)->first());
         }
-        
+
         //Remove null values from degrees array
         $degrees = array_filter($degrees);
+
         foreach($degrees as $degree) {
-            $response->assertSee($degree->title);
+            $response->assertSee('Degree: ' . $degree->title);
         }
         foreach($occupation_reqs as $req) {
-            $response->assertSee($req->charisma);
-            $response->assertSee($req->fitness);
-            $response->assertSee($req->intelligence);
+            $response->assertSee('Charisma: ' . $req->charisma);
+            $response->assertSee('Fitness: ' . $req->fitness);
+            $response->assertSee('Intelligence: ' . $req->intelligence);
         }
     }
 }
