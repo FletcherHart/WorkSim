@@ -24,6 +24,12 @@ class Apply extends Component
         $user = auth()->user();
         if($user->charisma >= $this->reqs->charisma && $user->fitness >= $this->reqs->fitness && $user->intelligence >= $this->reqs->intelligence) 
         {
+            //Delete existing user occupation
+            if(UserOccupation::firstWhere('user_id', $user->id) != null)
+            {
+                UserOccupation::where('user_id', $user->id)->delete();
+            }
+
             $this->result = true;
             $newJob = new UserOccupation;
             $newJob->user_id = $user->id;
@@ -33,6 +39,6 @@ class Apply extends Component
         }
 
 
-        return view('livewire.apply', ['result'=>$this->result]);
+        return view('livewire.apply', ['result'=>$this->result, 'title' => $this->occupation->title]);
     }
 }
