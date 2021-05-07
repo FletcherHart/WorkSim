@@ -23,7 +23,8 @@ class EmploymentTest extends TestCase
      *
      * @return void 
      */
-    public function setUp():void {
+    public function setUp():void 
+    {
         parent::setUp();
 
         $this->company = Company::factory()->create();
@@ -33,14 +34,23 @@ class EmploymentTest extends TestCase
 
         $this->degrees = Degree::factory()->count($numDegrees)->create();
 
-        $this->occupations = Occupation::factory(['company_id' => $this->company->id])->count($this->numJobs)->create();
+        $this->occupations = Occupation::factory(
+            [
+            'company_id' => $this->company->id
+            ]
+        )->count($this->numJobs)->create();
 
-        foreach($this->occupations as $occupation) {
-            OccupationRequirement::factory(['occupation_id' => $occupation->id])->create();
+        foreach ($this->occupations as $occupation) {
+            OccupationRequirement::factory(
+                [
+                'occupation_id' => $occupation->id
+                ]
+            )->create();
         }
 
-        foreach($this->degrees as $degree) {
-            $degree->occupations()->save($this->occupations[rand(0, $this->numJobs-1)]);
+        foreach ($this->degrees as $degree) {
+            $degree->occupations()
+                ->save($this->occupations[rand(0, $this->numJobs-1)]);
         }
     }
 
@@ -55,7 +65,7 @@ class EmploymentTest extends TestCase
 
         $response = $this->get('/employment');
 
-        foreach($this->occupations as $occupation) {
+        foreach ($this->occupations as $occupation) {
             $response->assertSee($occupation->title);
             $response->assertSee($occupation->description);
             $response->assertSee($occupation->salary);
@@ -76,18 +86,25 @@ class EmploymentTest extends TestCase
 
         $degrees = [];
         $occupation_reqs = [];
-        foreach($this->occupations as $occupation) {
-            array_push($degrees, Degree::where('id', $occupation->degree_id)->first());
-            array_push($occupation_reqs, OccupationRequirement::where('occupation_id', $occupation->id)->first());
+        foreach ($this->occupations as $occupation) {
+            array_push(
+                $degrees, 
+                Degree::where('id', $occupation->degree_id)->first()
+            );
+            array_push(
+                $occupation_reqs, 
+                OccupationRequirement::where('occupation_id', $occupation->id)
+                    ->first()
+            );
         }
 
         //Remove null values from degrees array
         $degrees = array_filter($degrees);
 
-        foreach($degrees as $degree) {
+        foreach ($degrees as $degree) {
             $response->assertSee('Degree: ' . $degree->title);
         }
-        foreach($occupation_reqs as $req) {
+        foreach ($occupation_reqs as $req) {
             $response->assertSee('Charisma: ' . $req->charisma);
             $response->assertSee('Fitness: ' . $req->fitness);
             $response->assertSee('Intelligence: ' . $req->intelligence);
@@ -108,19 +125,23 @@ class EmploymentTest extends TestCase
         $taken_jobs = [];
 
         //Start at 1 as no id can be 0.
-        for($i=1;$i<=$num_users;$i++) {
+        for ($i=1;$i<=$num_users;$i++) {
 
             $occupation = $this->occupations[rand(1, $this->numJobs-1)];
             
-            $user_job = UserOccupation::where([
+            $user_job = UserOccupation::where(
+                [
                 ['occupation_id', '=', $occupation->id], 
-            ])->first();
+                ]
+            )->first();
 
-            if($user_job == null) {
-                UserOccupation::create([
+            if ($user_job == null) {
+                UserOccupation::create(
+                    [
                     'occupation_id' => $occupation->id,
                     'user_id' => User::firstWhere('id', $i)->id
-                ]);
+                    ]
+                );
             } else {
                 $user_job->user_id = $i;
                 $user_job->save();
@@ -129,12 +150,13 @@ class EmploymentTest extends TestCase
             $taken_jobs[] = $occupation;
         }
 
-        //Create user now to prevent player getting a job, as player job is always displayed in sidebar
+        //Create user now to prevent player getting a job, 
+        //as player job is always displayed in sidebar
         $this->actingAs($user = User::factory()->create());
 
         $response = Livewire::test('employment');
 
-        foreach($taken_jobs as $occupation) {
+        foreach ($taken_jobs as $occupation) {
             $response->assertDontSee($occupation->title);
             $response->assertDontSee($occupation->description);
         }
@@ -145,7 +167,8 @@ class EmploymentTest extends TestCase
      *
      * @return void
      */
-    public function test_user_can_apply_to_a_job() {
+    public function test_user_can_apply_to_a_job()
+    {
         $this->actingAs($user = User::factory()->create());
         Livewire::test('apply', ['id' => 1])->assertViewIs('livewire.apply');
     }
@@ -154,12 +177,23 @@ class EmploymentTest extends TestCase
     /**
      * Assert a user who qualifies for an NPC occupation automatically gets it.
      * Also assert that said user is properly notified.
+     *
      * @return void
      */
-    public function test_qualifying_user_auto_gets_npc_job() {
-        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+    public function test_qualifying_user_auto_gets_npc_job()
+    {
+        $this->actingAs(
+            $user = User::factory(
+                [
+                'charisma'=>200,
+                'fitness'=>200,
+                'intelligence'=>200,
+                ]
+            )->create()
+        );
 
-        //Get & modify first existing occupation which is guaranteed to exist due to setup()
+        //Get & modify first existing occupation,
+        //which is guaranteed to exist due to setup()
         $occupation = Occupation::where('id', 1)->first();
 
         $reqs = OccupationRequirement::where('id', $occupation->id)->first();
@@ -169,9 +203,16 @@ class EmploymentTest extends TestCase
         $reqs->save();
 
         Livewire::test('apply', ['id' => 1])
-        ->assertSet('result', true)
-        ->assertSee('Congrats! You have been accepted for the position of ' . $occupation->title);
-        $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
+            ->assertSet('result', true)
+            ->assertSee(
+                'Congrats! You have been accepted for the position of ' 
+                . 
+                $occupation->title
+            );
+        $this->assertDatabaseHas(
+            'user_occupation', 
+            ['user_id' => $user->id, 'occupation_id' => $occupation->id]
+        );
     }
 
     /**
@@ -179,18 +220,30 @@ class EmploymentTest extends TestCase
      * 
      * @return void
      */
-    public function test_user_can_change_jobs() {
-        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+    public function test_user_can_change_jobs()
+    {
+        $this->actingAs(
+            $user = User::factory(
+                [
+                'charisma'=>200,
+                'fitness'=>200,
+                'intelligence'=>200,
+                ]
+            )->create()
+        );
 
         //Get first existing occupation which is guaranteed to exist due to setup()
         $current_job = Occupation::where('id', 1)->first();
 
-        UserOccupation::create([
-            'user_id' => $user->id,
-            'occupation_id' => $current_job->id
-        ]);
+        UserOccupation::create(
+            [
+                'user_id' => $user->id,
+                'occupation_id' => $current_job->id
+            ]
+        );
 
-        //Get & modify second existing occupation which is guaranteed to exist due to setup()
+        //Get & modify second existing occupation, which is guaranteed
+        //to exist due to setup()
         $occupation = Occupation::where('id', 2)->first();
 
         $reqs = OccupationRequirement::where('id', $occupation->id)->first();
@@ -199,9 +252,16 @@ class EmploymentTest extends TestCase
         $reqs->intelligence = 5;
         $reqs->save();
 
-        Livewire::test('apply', ['id' => $occupation->id])->assertSet('result', true);
-        $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
-        $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $current_job->id]);
+        Livewire::test('apply', ['id' => $occupation->id])
+            ->assertSet('result', true);
+        $this->assertDatabaseHas(
+            'user_occupation', 
+            ['user_id' => $user->id, 'occupation_id' => $occupation->id]
+        );
+        $this->assertDatabaseMissing(
+            'user_occupation', 
+            ['user_id' => $user->id, 'occupation_id' => $current_job->id]
+        );
     }
 
     /**
@@ -209,21 +269,45 @@ class EmploymentTest extends TestCase
      * 
      * @return void
      */
-    public function test_user_cannot_take_another_users_job() {
-        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+    public function test_user_cannot_take_another_users_job() 
+    {
+        $this->actingAs(
+            $user = User::factory(
+                [
+                    'charisma'=>200,
+                    'fitness'=>200,
+                    'intelligence'=>200,
+                ]
+            )
+            ->create()
+        );
 
-        $second_user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create();
+        $second_user = User::factory(
+            [
+                'charisma'=>200,
+                'fitness'=>200,
+                'intelligence'=>200,
+            ]
+        )->create();
 
         //Get first existing occupation which is guaranteed to exist due to setup()
         $occupation = Occupation::where('id', 1)->first();
 
-        UserOccupation::create([
-            'user_id' => $second_user->id,
-            'occupation_id' => $occupation->id
-        ]);
+        UserOccupation::create(
+            [
+                'user_id' => $second_user->id,
+                'occupation_id' => $occupation->id
+            ]
+        );
 
         Livewire::test('apply', ['id' => $occupation->id]);
-        $this->assertDatabaseHas('user_occupation', ['user_id' => $second_user->id, 'occupation_id' => $occupation->id]);
-        $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
+        $this->assertDatabaseHas(
+            'user_occupation', 
+            ['user_id' => $second_user->id, 'occupation_id' => $occupation->id]
+        );
+        $this->assertDatabaseMissing(
+            'user_occupation', 
+            ['user_id' => $user->id, 'occupation_id' => $occupation->id]
+        );
     }
 }
