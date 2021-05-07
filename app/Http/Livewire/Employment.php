@@ -9,10 +9,7 @@ class Employment extends Component
 {
     public function render()
     {
-        $occupations = Occupation::join('companies', 'companies.id', '=', 'occupations.company_id')
-            ->join('occupation_requirements as req', 'occupations.id', '=', 'req.occupation_id')
-            ->leftJoin('degrees', 'occupations.degree_id', '=', 'degrees.id')
-            ->select('occupations.id',
+        $occupations = Occupation::select('occupations.id',
             'occupations.title', 
             'occupations.description', 
             'occupations.salary', 
@@ -21,6 +18,12 @@ class Employment extends Component
             'req.charisma',
             'req.intelligence',
             'req.fitness')
+            ->join('companies', 'companies.id', '=', 'occupations.company_id')
+            ->Join('user_occupation', 'user_occupation.occupation_id', '=', 'occupations.id', 'left outer')
+            ->where('user_occupation.id', null)
+            ->join('occupation_requirements as req', 'occupations.id', '=', 'req.occupation_id')
+            ->leftJoin('degrees', 'occupations.degree_id', '=', 'degrees.id')
+            ->orderBy('occupations.id', 'ASC')
             ->get();
 
         return view('livewire.employment', ['occupations'=>$occupations]);
