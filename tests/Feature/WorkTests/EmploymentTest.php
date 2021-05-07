@@ -33,10 +33,9 @@ class EmploymentTest extends TestCase
 
         $this->degrees = Degree::factory()->count($numDegrees)->create();
 
-        $this->occupations = Occupation::factory()->count($numJobs)->create();
+        $this->occupations = Occupation::factory(['company_id' => $this->company->id])->count($numJobs)->create();
 
         foreach($this->occupations as $occupation) {
-            $occupation->companies()->attach($this->company->id);
             OccupationRequirement::factory(['occupation_id' => $occupation->id])->create();
         }
 
