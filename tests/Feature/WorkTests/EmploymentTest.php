@@ -122,7 +122,6 @@ class EmploymentTest extends TestCase
         $reqs->intelligence = 5;
         $reqs->save();
 
-        //$response = $this->get('/apply/' . $occupation->id);
         Livewire::test('apply', ['id' => 1])
         ->assertSet('result', true)
         ->assertSee('Congrats! You have been accepted for the position of ' . $occupation->title);
@@ -154,7 +153,6 @@ class EmploymentTest extends TestCase
         $reqs->intelligence = 5;
         $reqs->save();
 
-        //$response = $this->get('/apply/' . $occupation->id);
         Livewire::test('apply', ['id' => $occupation->id])->assertSet('result', true);
         $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
         $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $current_job->id]);
