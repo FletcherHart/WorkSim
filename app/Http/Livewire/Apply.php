@@ -29,6 +29,7 @@ class Apply extends Component
             $newJob->user_id = $user->id;
             $newJob->occupation_id = $this->occupation->id;
             $newJob->save();
+            $this->reqs->delete();
         }
 
 
