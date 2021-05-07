@@ -7,6 +7,7 @@ use App\Models\Degree;
 use App\Models\Occupation;
 use App\Models\OccupationRequirement;
 use App\Models\User;
+use App\Models\UserOccupation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire;
@@ -123,7 +124,40 @@ class EmploymentTest extends TestCase
         $reqs->save();
 
         //$response = $this->get('/apply/' . $occupation->id);
-        Livewire::test('apply', ['id' => 1])->assertSet('result', true);
+        Livewire::test('apply', ['id' => 1])
+        ->assertSet('result', true)
+        ->assertSee('Congrats! You have been accepted for the position of ' . $occupation->title);
         $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
+    }
+
+    /**
+     * Assert a user with a job can switch to a new job.
+     * 
+     * @return void
+     */
+    public function test_user_can_change_jobs() {
+        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+
+        //Get first existing occupation which is guaranteed to exist due to setup()
+        $current_job = Occupation::where('id', 1)->first();
+
+        UserOccupation::create([
+            'user_id' => $user->id,
+            'occupation_id' => $current_job->id
+        ]);
+
+        //Get & modify second existing occupation which is guaranteed to exist due to setup()
+        $occupation = Occupation::where('id', 2)->first();
+
+        $reqs = OccupationRequirement::where('id', $occupation->id)->first();
+        $reqs->charisma = 5;
+        $reqs->fitness = 5;
+        $reqs->intelligence = 5;
+        $reqs->save();
+
+        //$response = $this->get('/apply/' . $occupation->id);
+        Livewire::test('apply', ['id' => $occupation->id])->assertSet('result', true);
+        $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
+        $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $current_job->id]);
     }
 }
