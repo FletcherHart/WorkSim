@@ -22,20 +22,23 @@ class Apply extends Component
     public function render()
     {
         $user = auth()->user();
-        if($user->charisma >= $this->reqs->charisma && $user->fitness >= $this->reqs->fitness && $user->intelligence >= $this->reqs->intelligence) 
+        //Ensure occupation not taken by a user
+        if(UserOccupation::firstWhere('occupation_id', $this->occupation->id) == null)
         {
-            //Delete existing user occupation
-            if(UserOccupation::firstWhere('user_id', $user->id) != null)
+            if($user->charisma >= $this->reqs->charisma && $user->fitness >= $this->reqs->fitness && $user->intelligence >= $this->reqs->intelligence) 
             {
-                UserOccupation::where('user_id', $user->id)->delete();
-            }
+                //Delete existing user occupation
+                if(UserOccupation::firstWhere('user_id', $user->id) != null)
+                {
+                    UserOccupation::where('user_id', $user->id)->delete();
+                }
 
-            $this->result = true;
-            $newJob = new UserOccupation;
-            $newJob->user_id = $user->id;
-            $newJob->occupation_id = $this->occupation->id;
-            $newJob->save();
-            $this->reqs->delete();
+                $this->result = true;
+                $newJob = new UserOccupation;
+                $newJob->user_id = $user->id;
+                $newJob->occupation_id = $this->occupation->id;
+                $newJob->save();
+            }
         }
 
 
