@@ -17,6 +17,9 @@ class UpdateOccupationsTableWithDegree extends Migration
             $table->foreignId('degree_id')->nullable()
                 ->constrained('degrees')
                 ->onDelete('cascade');
+            $table->foreignId('company_id')->default(1)
+                ->constrained('companies')
+                ->onDelete('cascade');
         });
     }
 
@@ -28,7 +31,7 @@ class UpdateOccupationsTableWithDegree extends Migration
     public function down()
     {
         Schema::table('occupations', function (Blueprint $table) {
-            $table->dropForeign(['degree_id']);
+            $table->dropForeign(['degree_id', 'company_id']);
         });
     }
 }
