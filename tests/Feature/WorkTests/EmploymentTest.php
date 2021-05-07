@@ -157,4 +157,27 @@ class EmploymentTest extends TestCase
         $this->assertDatabaseHas('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
         $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $current_job->id]);
     }
+
+    /**
+     * Assert a user cannot take another user's job.
+     * 
+     * @return void
+     */
+    public function test_user_cannot_take_another_users_job() {
+        $this->actingAs($user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create());
+
+        $second_user = User::factory(['charisma'=>200,'fitness'=>200,'intelligence'=>200,])->create();
+
+        //Get first existing occupation which is guaranteed to exist due to setup()
+        $occupation = Occupation::where('id', 1)->first();
+
+        UserOccupation::create([
+            'user_id' => $second_user->id,
+            'occupation_id' => $occupation->id
+        ]);
+
+        Livewire::test('apply', ['id' => $occupation->id]);
+        $this->assertDatabaseHas('user_occupation', ['user_id' => $second_user->id, 'occupation_id' => $occupation->id]);
+        $this->assertDatabaseMissing('user_occupation', ['user_id' => $user->id, 'occupation_id' => $occupation->id]);
+    }
 }
