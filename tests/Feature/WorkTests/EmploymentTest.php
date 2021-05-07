@@ -28,19 +28,19 @@ class EmploymentTest extends TestCase
 
         $this->company = Company::factory()->create();
 
-        $numJobs = 3;
+        $this->numJobs = 3;
         $numDegrees = 3;
 
         $this->degrees = Degree::factory()->count($numDegrees)->create();
 
-        $this->occupations = Occupation::factory(['company_id' => $this->company->id])->count($numJobs)->create();
+        $this->occupations = Occupation::factory(['company_id' => $this->company->id])->count($this->numJobs)->create();
 
         foreach($this->occupations as $occupation) {
             OccupationRequirement::factory(['occupation_id' => $occupation->id])->create();
         }
 
         foreach($this->degrees as $degree) {
-            $degree->occupations()->save($this->occupations[rand(0, $numJobs-1)]);
+            $degree->occupations()->save($this->occupations[rand(0, $this->numJobs-1)]);
         }
     }
 
@@ -91,6 +91,52 @@ class EmploymentTest extends TestCase
             $response->assertSee('Charisma: ' . $req->charisma);
             $response->assertSee('Fitness: ' . $req->fitness);
             $response->assertSee('Intelligence: ' . $req->intelligence);
+        }
+    }
+
+    /**
+     * Assert a user visiting employment page does NOT see any taken jobs
+     *
+     * @return void
+     */
+    public function test_employment_page_does_not_display_taken_jobs()
+    {
+        //Create several users
+        $num_users = 3;
+        User::factory()->count($num_users)->create();
+
+        $taken_jobs = [];
+
+        //Start at 1 as no id can be 0.
+        for($i=1;$i<=$num_users;$i++) {
+
+            $occupation = $this->occupations[rand(1, $this->numJobs-1)];
+            
+            $user_job = UserOccupation::where([
+                ['occupation_id', '=', $occupation->id], 
+            ])->first();
+
+            if($user_job == null) {
+                UserOccupation::create([
+                    'occupation_id' => $occupation->id,
+                    'user_id' => User::firstWhere('id', $i)->id
+                ]);
+            } else {
+                $user_job->user_id = $i;
+                $user_job->save();
+            }
+
+            $taken_jobs[] = $occupation;
+        }
+
+        //Create user now to prevent player getting a job, as player job is always displayed in sidebar
+        $this->actingAs($user = User::factory()->create());
+
+        $response = Livewire::test('employment');
+
+        foreach($taken_jobs as $occupation) {
+            $response->assertDontSee($occupation->title);
+            $response->assertDontSee($occupation->description);
         }
     }
 
