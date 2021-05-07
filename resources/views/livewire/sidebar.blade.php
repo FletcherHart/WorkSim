@@ -4,8 +4,8 @@
     <h2 class="text-lg font-semibold">Occupation</h2>
     <div class="inline">
         @if($occupation != null)
-            <h3>{{$occupation}}</h3>
-            <p>Salary: {{$occupation->salary}}</p>
+            <h3>{{$occupation->title}}</h3>
+            <p>Salary: ${{$occupation->salary}}</p>
         @else
             <h3>Unemployed</h3>
             <p>Salary: $0</p>
