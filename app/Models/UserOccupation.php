@@ -10,6 +10,10 @@ class UserOccupation extends Model
     use HasFactory;
 
     protected $table = "user_occupation";
+    protected $fillable = [
+        'user_id',
+        'occupation_id'
+    ];
 
     public function user() {
         return $this->belongsTo(User::class);
