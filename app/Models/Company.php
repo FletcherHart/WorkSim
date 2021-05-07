@@ -13,6 +13,6 @@ class Company extends Model
 
     public function jobs()
     {
-        return $this->belongsToMany(Occupation::class);
+        return $this->hasMany(Occupation::class);
     }
 }

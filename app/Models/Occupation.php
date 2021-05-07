@@ -9,9 +9,9 @@ class Occupation extends Model
 {
     use HasFactory;
 
-    public function companies()
+    public function company()
     {
-        return $this->belongsToMany(Company::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function degree()
