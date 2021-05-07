@@ -31,7 +31,8 @@ class UpdateOccupationsTableWithDegree extends Migration
     public function down()
     {
         Schema::table('occupations', function (Blueprint $table) {
-            $table->dropForeign(['degree_id', 'company_id']);
+            $table->dropForeign('occupations_degree_id_foreign');
+            $table->dropForeign('occupations_company_id_foreign');
         });
     }
 }
