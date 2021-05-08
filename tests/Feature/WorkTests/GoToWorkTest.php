@@ -83,4 +83,40 @@ class GoToWorkTest extends TestCase
         $response->assertSee("You are currently unemployed. Please click the button below to look for jobs.");
     }
 
+        /**
+     * Assert employed user can work
+     *
+     * @return void
+     */
+    public function test_employed_user_can_work()
+    {
+        $response = Livewire::test('work')
+            ->call('doWork');
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Assert that doing work increases users money by ammount equal to occupation salary
+     *
+     * @return void
+     */
+    public function test_working_earns_money()
+    {
+        $initial_money = 500;
+        $this->user->money = $initial_money;
+        $this->user->save();
+
+        $response = Livewire::test('work')
+            ->call('doWork');
+
+        $this->assertDatabaseHas(
+            'users', 
+            [
+                'id' => $this->user->id, 
+                'money' => ($initial_money + $this->occupation->salary)
+            ]
+        );
+    }
+
 }
