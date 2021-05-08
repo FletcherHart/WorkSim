@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/work', [Work::class, 'render'])->name('work');
+Route::middleware(['auth:sanctum', 'verified'])->get('/work', Work::class)->name('work');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/employment', [Employment::class, 'render'])->name('employment');
 
