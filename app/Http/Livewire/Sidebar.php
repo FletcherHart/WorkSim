@@ -9,6 +9,8 @@ use App\Models\Occupation;
 class Sidebar extends Component
 {
 
+    protected $listeners = ['addMoney' => 'render'];
+
     public function render()
     {
         $user = User::where('id', auth()->id())
