@@ -12,7 +12,7 @@
                     <h3 class="text-lg font-bold">Unemployed</h3>
                     <p>You are currently unemployed. Please click the button below to look for jobs.</p>
                     <br>
-                    <a href="#" class="bg-blue-600 p-2 text-white w-max">Look for a job.</a>
+                    <a href="/employment" class="bg-blue-600 p-2 text-white w-max">Look for a job.</a>
                 @else
                     
                 @endif
