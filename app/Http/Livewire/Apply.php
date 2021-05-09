@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Occupation;
 use App\Models\OccupationRequirement;
+use App\Models\UserDegree;
 use App\Models\UserOccupation;
 
 class Apply extends Component
@@ -22,6 +23,24 @@ class Apply extends Component
     public function render()
     {
         $user = auth()->user();
+
+        //Check if user has or needs appropriate degree
+        if($this->occupation->degree_id != null)
+        {
+            $user_degree = UserDegree::where(
+                [
+                    'user_id' => $user->id,
+                    'degree_id' => $this->occupation->degree_id
+                ]
+            )
+            ->first();
+
+            if($user_degree == null) 
+            {
+                return view('livewire.apply', ['result'=>$this->result, 'title' => $this->occupation->title]);
+            }
+        }
+
         //Ensure occupation not taken by a user
         if(UserOccupation::firstWhere('occupation_id', $this->occupation->id) == null)
         {

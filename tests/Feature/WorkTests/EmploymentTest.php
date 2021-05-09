@@ -7,6 +7,7 @@ use App\Models\Degree;
 use App\Models\Occupation;
 use App\Models\OccupationRequirement;
 use App\Models\User;
+use App\Models\UserDegree;
 use App\Models\UserOccupation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -173,6 +174,41 @@ class EmploymentTest extends TestCase
         Livewire::test('apply', ['id' => 1])->assertViewIs('livewire.apply');
     }
 
+    /**
+     * Assert a user who does not have relevant degree fails application
+     *
+     * @return void
+     */
+    public function test_user_without_needed_degree_does_not_get_job()
+    {
+        //Ensure user qualifies other than degree
+        $this->actingAs(
+            $user = User::factory(
+                [
+                'charisma'=>200,
+                'fitness'=>200,
+                'intelligence'=>200,
+                ]
+            )->create()
+        );
+
+        $occupation = Occupation::where('degree_id', '!=', null)->first();
+
+        $reqs = OccupationRequirement::where('id', $occupation->id)->first();
+        $reqs->charisma = 5;
+        $reqs->fitness = 5;
+        $reqs->intelligence = 5;
+        $reqs->save();
+
+        Livewire::test('apply', ['id' => 1])
+            ->assertSet('result', false)
+            ->assertSee('Better luck next time.');
+        $this->assertDatabaseMissing(
+            'user_occupation', 
+            ['user_id' => $user->id, 'occupation_id' => $occupation->id]
+        );
+    }
+
     
     /**
      * Assert a user who qualifies for an NPC occupation automatically gets it.
@@ -201,6 +237,15 @@ class EmploymentTest extends TestCase
         $reqs->fitness = 5;
         $reqs->intelligence = 5;
         $reqs->save();
+
+        //Ensure user has needed degree
+        if($occupation->degree_id != null)
+        {
+            UserDegree::create([
+                'user_id' => $user->id,
+                'degree_id' => $occupation->degree_id
+            ]);
+        }
 
         Livewire::test('apply', ['id' => 1])
             ->assertSet('result', true)
@@ -251,6 +296,15 @@ class EmploymentTest extends TestCase
         $reqs->fitness = 5;
         $reqs->intelligence = 5;
         $reqs->save();
+
+        //Ensure user has needed degree
+        if($occupation->degree_id != null)
+        {
+            UserDegree::create([
+                'user_id' => $user->id,
+                'degree_id' => $occupation->degree_id
+            ]);
+        }
 
         Livewire::test('apply', ['id' => $occupation->id])
             ->assertSet('result', true);
