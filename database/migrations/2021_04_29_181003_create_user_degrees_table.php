@@ -21,7 +21,7 @@ class CreateUserDegreesTable extends Migration
             $table->foreignId('degree_id')
                 ->constrained('degrees')
                 ->onDelete('cascade');
-            $table->unsignedTinyInteger('current_exp')->detault(0);
+            $table->unsignedTinyInteger('current_exp')->default(0);
             $table->timestamps();
         });
     }
