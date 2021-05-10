@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Company;
 use App\Models\Degree;
+use App\Models\DegreeProgress;
 use App\Models\Occupation;
 use App\Models\OccupationRequirement;
 use App\Models\User;
@@ -73,5 +74,37 @@ class EducationTest extends TestCase
                 'progress' => 0
             ]
         );
+    }
+
+    /**
+     * Ensure that a user enrolled in degree programs
+     * can see list of programs enrolled in
+     * @return void 
+     */
+    public function test_user_can_increase_progress_toward_degree() 
+    {
+        $degrees = [];
+
+        for ($i = 1; $i<rand(2,$this->num_degrees-1); $i++)
+        {    
+            DegreeProgress::create(
+                [
+                    'user_id' => $this->user->id,
+                    'degree_id' => $this->degrees[$i]->id
+                ]
+            );
+
+            $degrees[] = $this->degrees[$i];
+        }
+
+        $response = Livewire::test('study')
+        ->assertViewIs('livewire.study');
+        
+        foreach ($degrees as $degree)
+        {
+            $response->assertSee($degree->title)
+            ->assertSee($degree->description)
+            ->assertSee($degree->cost);
+        }
     }
 }
