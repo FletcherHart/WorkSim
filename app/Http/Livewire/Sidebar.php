@@ -9,7 +9,7 @@ use App\Models\Occupation;
 class Sidebar extends Component
 {
 
-    protected $listeners = ['addMoney' => 'render'];
+    protected $listeners = ['updateSidebar' => 'render'];
 
     public function render()
     {

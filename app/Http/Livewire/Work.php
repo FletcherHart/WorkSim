@@ -73,7 +73,6 @@ class Work extends Component
 
         $company->save();
 
-        $this->emit('addMoney');
-        $this->emit('costEnergy');
+        $this->emit('updateSidebar');
     }
 }
