@@ -16,6 +16,7 @@ class Work extends Component
 
     public $occupation;
     public $user;
+    public $error;
 
     public function mount() {
 
@@ -32,7 +33,7 @@ class Work extends Component
 
     public function render()
     {
-        return view('livewire.work', ['occupation' => $this->occupation])
+        return view('livewire.work', ['occupation' => $this->occupation, 'error' => $this->error])
             ->layout('layouts.app');
     }
 
@@ -41,38 +42,45 @@ class Work extends Component
      * @return void
      */
     public function doWork() {
-        $this->user->money += $this->occupation->salary;
-        $this->user->current_energy -= 1;
-        $this->user->save();
+        if($this->user->current_energy > 0)
+        { 
+            $this->user->money += $this->occupation->salary;
+            $this->user->current_energy -= 1;
+            $this->user->save();
 
-        $company = Company::where('id', $this->occupation->company_id)->first();
+            $company = Company::where('id', $this->occupation->company_id)->first();
 
-        //Bonus multiplier for having a specific degree
-        $degree_bonus = 1;
+            //Bonus multiplier for having a specific degree
+            $degree_bonus = 1;
 
-        if ($this->occupation->degree_id != null)
-        {
-            if (UserDegree::where(['user_id' => $this->user->id, 'degree_id' => $this->occupation->degree_id])->first() != null)
+            if ($this->occupation->degree_id != null)
             {
-                $degree_bonus = 2;
+                if (UserDegree::where(['user_id' => $this->user->id, 'degree_id' => $this->occupation->degree_id])->first() != null)
+                {
+                    $degree_bonus = 2;
+                }
             }
-        }
 
-        if ($this->occupation->bonus_stat == "charisma") 
-        {
-            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
-        }
-        else if ($this->occupation->bonus_stat == "intelligence")
-        {
-            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
-        }
-        else if ($this->occupation->bonus_stat == "fitness")
-        {
-            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
-        }
+            if ($this->occupation->bonus_stat == "charisma") 
+            {
+                $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
+            }
+            else if ($this->occupation->bonus_stat == "intelligence")
+            {
+                $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
+            }
+            else if ($this->occupation->bonus_stat == "fitness")
+            {
+                $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
+            }
 
-        $company->save();
+            $company->save();
 
-        $this->emit('updateSidebar');
+            $this->emit('updateSidebar');
+        }
+        else 
+        {
+            $this->error = 'Uh oh! It seems you are out of energy. Please wait for energy to refill.';
+        }
     }
 }

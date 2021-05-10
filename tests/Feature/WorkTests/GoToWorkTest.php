@@ -119,6 +119,31 @@ class GoToWorkTest extends TestCase
     }
 
     /**
+     * Assert that if user does not have enough energy no money is earned
+     * and error is shown.
+     * @return void
+     */
+    public function test_if_user_has_no_energy_cannot_work()
+    {
+        $initial_money = 500;
+        $this->user->current_energy = 0;
+        $this->user->money = $initial_money;
+        $this->user->save();
+
+        $response = Livewire::test('work')
+            ->call('doWork')
+            ->assertSet('error','Uh oh! It seems you are out of energy. Please wait for energy to refill.');
+
+        //Assert money stays the same
+        $this->assertDatabaseHas(
+            'users',
+            [
+                'money' => $initial_money,
+            ]
+        );
+    }
+
+    /**
      * Assert that doing work increases users money by ammount equal to occupation salary
      *
      * @return void
