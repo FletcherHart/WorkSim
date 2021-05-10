@@ -9,6 +9,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Company;
 use App\Models\Occupation;
+use App\Models\UserDegree;
 
 class Work extends Component
 {
@@ -45,17 +46,28 @@ class Work extends Component
 
         $company = Company::where('id', $this->occupation->company_id)->first();
 
+        //Bonus multiplier for having a specific degree
+        $degree_bonus = 1;
+
+        if ($this->occupation->degree_id != null)
+        {
+            if (UserDegree::where(['user_id' => $this->user->id, 'degree_id' => $this->occupation->degree_id])->first() != null)
+            {
+                $degree_bonus = 2;
+            }
+        }
+
         if ($this->occupation->bonus_stat == "charisma") 
         {
-            $company->money += (200 - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
+            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
         }
         else if ($this->occupation->bonus_stat == "intelligence")
         {
-            $company->money += (200 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
+            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
         }
         else if ($this->occupation->bonus_stat == "fitness")
         {
-            $company->money += (200 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
+            $company->money += ((200*$degree_bonus) - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
         }
 
         $company->save();

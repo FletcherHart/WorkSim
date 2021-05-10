@@ -7,6 +7,7 @@ use App\Models\Degree;
 use App\Models\Occupation;
 use App\Models\OccupationRequirement;
 use App\Models\User;
+use App\Models\UserDegree;
 use App\Models\UserOccupation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -148,6 +149,55 @@ class GoToWorkTest extends TestCase
         else if ($this->occupation->bonus_stat == "fitness")
         {
             $formula_result = $initial_money + (200 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
+        }
+
+        $this->assertDatabaseHas(
+            'companies', 
+            [
+                'id' => $this->user->id, 
+                'money' => $formula_result
+            ]
+        );
+    }
+
+    /**
+     * Assert that users with required degree earn company more
+     * than base pay.
+     * For this test occupation & user SHOULD have degree
+     * @return void
+     */
+    public function test_user_with_appropriate_degree_earns_company_more()
+    {
+        $initial_money = 500;
+        $this->company->money = $initial_money;
+        $this->company->save();
+        $degree = Degree::factory()->create();
+        $this->occupation->degree_id = $degree->id;
+        $this->occupation->save();
+
+        UserDegree::create(
+            [
+               'user_id' => $this->user->id,
+                'degree_id' => $degree->id
+            ]
+        );
+
+        $response = Livewire::test('work')
+            ->call('doWork');
+
+        $formula_result = 0;
+
+        if ($this->occupation->bonus_stat == "charisma") 
+        {
+            $formula_result = $initial_money + (200*2 - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
+        }
+        else if ($this->occupation->bonus_stat == "intelligence")
+        {
+            $formula_result = $initial_money + (200*2 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
+        }
+        else if ($this->occupation->bonus_stat == "fitness")
+        {
+            $formula_result = $initial_money + (200*2 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
         }
 
         $this->assertDatabaseHas(
