@@ -31,6 +31,8 @@ class UserFactory extends Factory
             'charisma' => $this->faker->numberBetween(0, 255),
             'intelligence' => $this->faker->numberBetween(0, 255),
             'fitness' => $this->faker->numberBetween(0, 255),
+            'current_energy' => 20,
+            'max_energy' => 20
         ];
     }
 

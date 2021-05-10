@@ -98,6 +98,27 @@ class GoToWorkTest extends TestCase
     }
 
     /**
+     * Assert working costs energy
+     *
+     * @return void
+     */
+    public function test_working_costs_energy()
+    {
+
+        $expected_energy = $this->user->max_energy - 1;
+
+        $response = Livewire::test('work')
+            ->call('doWork');
+
+        $this->assertDatabaseHas(
+            'users',
+            [
+                'current_energy' => $expected_energy,
+            ]
+        );
+    }
+
+    /**
      * Assert that doing work increases users money by ammount equal to occupation salary
      *
      * @return void

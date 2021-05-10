@@ -42,6 +42,7 @@ class Work extends Component
      */
     public function doWork() {
         $this->user->money += $this->occupation->salary;
+        $this->user->current_energy -= 1;
         $this->user->save();
 
         $company = Company::where('id', $this->occupation->company_id)->first();
@@ -73,5 +74,6 @@ class Work extends Component
         $company->save();
 
         $this->emit('addMoney');
+        $this->emit('costEnergy');
     }
 }
