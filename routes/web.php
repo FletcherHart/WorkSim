@@ -2,6 +2,7 @@
 
 use App\Http\Livewire\Apply;
 use App\Http\Livewire\Employment;
+use App\Http\Livewire\Enroll;
 use App\Http\Livewire\Work;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/work', Work::class)->name
 Route::middleware(['auth:sanctum', 'verified'])->get('/employment', [Employment::class, 'render'])->name('employment');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/apply/{id}', Apply::class)->name('apply');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/enroll/{id}', Enroll::class)->name('enroll');

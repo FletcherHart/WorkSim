@@ -50,4 +50,28 @@ class EducationTest extends TestCase
             ->assertSee($degree->cost);
         }
     }
+
+    /**
+     * Ensure that a user can enroll in a degree program
+     *
+     * @return void 
+     */
+    public function test_user_can_see_enroll_in_degree_program() 
+    {
+        $degree = $this->degrees[rand(0,$this->num_degrees-1)];
+
+        $response = Livewire::test('enroll',['id' => $degree->id])
+        ->assertViewIs('livewire.enroll')
+        ->assertSee('Congrats!')
+        ->assertSee($degree->title);
+
+        $this->assertDatabaseHas(
+            'degree_progress',
+            [
+                'user_id' => $this->user->id,
+                'degree_id' => $degree->id,
+                'progress' => 0
+            ]
+        );
+    }
 }
