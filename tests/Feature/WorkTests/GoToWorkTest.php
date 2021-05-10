@@ -84,7 +84,7 @@ class GoToWorkTest extends TestCase
 
         $response->assertSee(
             "You are currently unemployed." .
-            "Please click the button below to look for jobs."
+            " Please click the button below to look for jobs."
         );
     }
 
@@ -140,7 +140,7 @@ class GoToWorkTest extends TestCase
             ->assertSet(
                 'error', 
                 'Uh oh! It seems you are out of energy.' .
-                'Please wait for energy to refill.'
+                ' Please wait for energy to refill.'
             );
 
         //Assert money stays the same
