@@ -202,7 +202,7 @@ class EmploymentTest extends TestCase
 
         Livewire::test('apply', ['id' => 1])
             ->assertSet('result', false)
-            ->assertSee('Better luck next time.');
+            ->assertSee('Oops! It looks like you don\'t have the necessary education.');
         $this->assertDatabaseMissing(
             'user_occupation', 
             ['user_id' => $user->id, 'occupation_id' => $occupation->id]
@@ -328,9 +328,9 @@ class EmploymentTest extends TestCase
         $this->actingAs(
             $user = User::factory(
                 [
-                    'charisma'=>200,
-                    'fitness'=>200,
-                    'intelligence'=>200,
+                    'charisma'=>255,
+                    'fitness'=>255,
+                    'intelligence'=>255,
                 ]
             )
             ->create()
@@ -354,7 +354,19 @@ class EmploymentTest extends TestCase
             ]
         );
 
-        Livewire::test('apply', ['id' => $occupation->id]);
+        //Ensure user has needed degree
+        if($occupation->degree_id != null)
+        {
+            UserDegree::create([
+                'user_id' => $user->id,
+                'degree_id' => $occupation->degree_id
+            ]);
+        }
+
+        Livewire::test('apply', ['id' => $occupation->id])
+        ->assertSet('result', false)
+        ->assertSee('Oops! It looks like this position is already filled.');
+
         $this->assertDatabaseHas(
             'user_occupation', 
             ['user_id' => $second_user->id, 'occupation_id' => $occupation->id]

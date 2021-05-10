@@ -24,6 +24,8 @@ class Apply extends Component
     {
         $user = auth()->user();
 
+        $reason = "";
+        
         //Check if user has or needs appropriate degree
         if($this->occupation->degree_id != null)
         {
@@ -37,7 +39,8 @@ class Apply extends Component
 
             if($user_degree == null) 
             {
-                return view('livewire.apply', ['result'=>$this->result, 'title' => $this->occupation->title]);
+                $reason = "Oops! It looks like you don't have the necessary education.";
+                return view('livewire.apply', ['result'=>$this->result, 'title' => $this->occupation->title, 'reason' => $reason]);
             }
         }
 
@@ -57,7 +60,33 @@ class Apply extends Component
                 $newJob->user_id = $user->id;
                 $newJob->occupation_id = $this->occupation->id;
                 $newJob->save();
+
+                return view('livewire.apply', ['result'=>$this->result, 'title' => $this->occupation->title]);
             }
+            else
+            {
+                $reason = "Oops! It looks like you don't qualify for this position.";
+                return view(
+                    'livewire.apply', 
+                    [
+                        'result'=>$this->result, 
+                        'title' => $this->occupation->title, 
+                        'reason' => $reason
+                    ]
+                );
+            }
+        }
+        else 
+        {
+            $reason = "Oops! It looks like this position is already filled.";
+            return view(
+                'livewire.apply', 
+                [
+                    'result'=>$this->result, 
+                    'title' => $this->occupation->title, 
+                    'reason' => $reason
+                ]
+            );
         }
 
 
