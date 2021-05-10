@@ -18,6 +18,7 @@ class CreateDegreesTable extends Migration
             $table->string('title');
             $table->tinytext('description');
             $table->unsignedTinyInteger('experience_req')->default(100);
+            $table->unsignedInteger('cost')->default(500);
             $table->timestamps();
         });
     }
