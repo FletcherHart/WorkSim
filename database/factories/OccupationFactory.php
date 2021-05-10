@@ -21,10 +21,12 @@ class OccupationFactory extends Factory
      */
     public function definition()
     {
+        $stats = ['charisma', 'fitness', 'intelligence'];
         return [
             'title' => $this->faker->jobTitle(),
             'description' => $this->faker->bs(),
             'salary' => $this->faker->numberBetween(100, 5000),
+            'bonus_stat' => $stats[rand(0,2)],
         ];
     }
 }

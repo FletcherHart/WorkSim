@@ -119,4 +119,44 @@ class GoToWorkTest extends TestCase
         );
     }
 
+    /**
+     * Assert that doing work increases company money using formula
+     * For this test occupation should not have degree
+     * @return void
+     */
+    public function test_working_earns_company_money_no_degree_needed()
+    {
+        $initial_money = 500;
+        $this->company->money = $initial_money;
+        $this->company->save();
+        $this->occupation->degree_id = null;
+        $this->occupation->save();
+
+        $response = Livewire::test('work')
+            ->call('doWork');
+
+        $formula_result = 0;
+
+        if ($this->occupation->bonus_stat == "charisma") 
+        {
+            $formula_result = $initial_money + (200 - $this->occupation->salary + $this->user->charisma*2 + $this->user->intelligence + $this->user->fitness);
+        }
+        else if ($this->occupation->bonus_stat == "intelligence")
+        {
+            $formula_result = $initial_money + (200 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence*2 + $this->user->fitness);
+        }
+        else if ($this->occupation->bonus_stat == "fitness")
+        {
+            $formula_result = $initial_money + (200 - $this->occupation->salary + $this->user->charisma + $this->user->intelligence + $this->user->fitness*2);
+        }
+
+        $this->assertDatabaseHas(
+            'companies', 
+            [
+                'id' => $this->user->id, 
+                'money' => $formula_result
+            ]
+        );
+    }
+
 }

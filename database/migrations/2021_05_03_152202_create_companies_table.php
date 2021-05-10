@@ -17,6 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('company_name');
             $table->unsignedSmallInteger('max_employees')->default(300);
+            $table->unsignedBigInteger('money')->default(0);
             $table->timestamps();
         });
     }
