@@ -200,7 +200,7 @@ class EmploymentTest extends TestCase
         $reqs->intelligence = 5;
         $reqs->save();
 
-        Livewire::test('apply', ['id' => 1])
+        Livewire::test('apply', ['id' => $occupation->id])
             ->assertSet('result', false)
             ->assertSee('Oops! It looks like you don\'t have the necessary education.');
         $this->assertDatabaseMissing(
