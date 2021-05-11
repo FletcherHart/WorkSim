@@ -16,9 +16,9 @@
                 </article>
                 <article class="col-span-1 flex flex-col items-center">
                     <h2 class="text-lg font-semibold">Education</h2>
-                    <a href="#" class="bg-blue-600 p-2 text-white">Go to class</a>
+                    <a href="" class="bg-blue-600 p-2 text-white">Go to class</a>
                     <br>
-                    <a href="#" class="bg-blue-600 p-2 text-white">Enroll</a>
+                    <a href="/degrees" class="bg-blue-600 p-2 text-white">Enroll</a>
                 </article>
             </div>
         </div>
