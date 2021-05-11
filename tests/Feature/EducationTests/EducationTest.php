@@ -77,7 +77,8 @@ class EducationTest extends TestCase
     }
 
     /**
-     * Ensure that a user does NOT see a list of degrees
+     * Ensure that on the degrees page a 
+     * user does NOT see degrees
      * that the user is already enrolled in
      * @return void 
      */
@@ -107,8 +108,9 @@ class EducationTest extends TestCase
     }
 
     /**
-     * Ensure that a user does NOT see degrees
-     * that the user already has
+     * Ensure that on the degrees page a 
+     * user does NOT see degrees
+     * that the user has already completed
      * @return void 
      */
     public function test_user_does_not_see_completed_degree_programs() 
