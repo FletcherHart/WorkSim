@@ -81,7 +81,7 @@ class EnrollmentTest extends TestCase
      * that the user is already enrolled in
      * @return void 
      */
-    public function test_user_does_not_see_enrolled_degree_programs() 
+    public function test_user_does_not_see_degrees_already_enrolled_in() 
     {
         $degrees = [];
 
@@ -112,7 +112,7 @@ class EnrollmentTest extends TestCase
      * that the user has already completed
      * @return void 
      */
-    public function test_user_does_not_see_completed_degree_programs() 
+    public function test_user_does_not_see_degrees_user_already_has() 
     {
         $degrees = [];
 
