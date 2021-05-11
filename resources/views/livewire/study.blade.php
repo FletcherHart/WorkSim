@@ -1,4 +1,7 @@
 <div>
+    @if($error != null)
+        <div>{{$error}}</div>
+    @endif
     @foreach($degrees as $degree)
         <div>{{$degree->title}}</div>
         <div>{{$degree->description}}</div>
