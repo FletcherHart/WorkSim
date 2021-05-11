@@ -27,7 +27,7 @@
                
 
                 <!-- Page Content -->
-                <div class="sm:col-span-4 col-span-2 relative text-center">
+                <div class="sm:col-span-4 col-span-2 flex flex-col text-center">
                     <!-- Page Heading -->
                     @if (isset($header))
                         <header class="shadow">
@@ -36,10 +36,10 @@
                             </div>
                         </header>
                     @endif
-                    <main>
+                    <main class="min-h-screen">
                         {{ $slot }}
                     </main>
-                    <footer class="w-full flex items-center justify-center absolute bottom-0 mb-5 mt-5">&#169; 2021</footer>
+                    <footer class="w-full flex items-center justify-center self-end mb-5 mt-5">&#169; 2021</footer>
                 </div>
             </div>
         </div>
