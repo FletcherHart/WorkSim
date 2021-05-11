@@ -14,21 +14,18 @@ class Study extends Component
     public $completed_degrees;
     public $error;
 
-    public function mount() 
+    public function render()
     {
         $this->degrees = DegreeProgress::where('user_id', auth()->id())
             ->join('degrees', 'degrees.id', '=', 'degree_progress.degree_id')
-            ->select('degrees.title', 'degrees.description', 'degrees.cost', 'degree_progress.progress')
+            ->select('degrees.title', 'degrees.description', 'degrees.cost', 'degrees.progress_needed', 'degree_progress.id', 'degree_progress.progress')
             ->get();
 
         $this->completed_degrees = Degree::join('user_degrees', 'user_degrees.degree_id', '=', 'degrees.id')
             ->where('user_degrees.user_id', auth()->id())
             ->select('degrees.title', 'degrees.description', 'user_degrees.created_at as date_recieved')
             ->get();
-    }
 
-    public function render()
-    {
         return view('livewire.study', 
             [
                 'degrees' => $this->degrees, 
