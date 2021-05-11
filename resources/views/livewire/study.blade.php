@@ -1,4 +1,12 @@
 <div>
+    @if($completed_degrees != null)
+        <div>Completed Degrees</div>
+        @foreach($completed_degrees as $degree)
+            <div>{{$degree->title}}</div>
+            <div>{{$degree->description}}</div>
+        @endforeach
+    @endif
+
     @if($error != null)
         <div>{{$error}}</div>
     @endif

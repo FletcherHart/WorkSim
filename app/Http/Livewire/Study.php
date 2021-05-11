@@ -4,12 +4,14 @@ namespace App\Http\Livewire;
 
 use App\Models\Degree;
 use App\Models\DegreeProgress;
+use App\Models\UserDegree;
 use Livewire\Component;
 
 class Study extends Component
 {
 
     public $degrees;
+    public $completed_degrees;
     public $error;
 
     public function mount() 
@@ -19,11 +21,21 @@ class Study extends Component
             ->select('degrees.title', 'degrees.description', 'degrees.cost', 'degree_progress.progress')
             ->get();
 
+        $this->completed_degrees = Degree::join('user_degrees', 'user_degrees.degree_id', '=', 'degrees.id')
+            ->where('user_degrees.user_id', auth()->id())
+            ->select('degrees.title', 'degrees.description', 'user_degrees.created_at as date_recieved')
+            ->get();
     }
 
     public function render()
     {
-        return view('livewire.study', ['degrees' => $this->degrees, 'error' => $this->error]);
+        return view('livewire.study', 
+            [
+                'degrees' => $this->degrees, 
+                'completed_degrees' => $this->completed_degrees, 
+                'error' => $this->error
+            ]
+        );
     }
 
     /**
@@ -52,6 +64,17 @@ class Study extends Component
 
             $degree_progress->progress += round(1 + (auth()->user()->intelligence/5));
             $degree_progress->save();
+
+            if($degree_progress->progress >= $degree->progress_needed)
+            {
+                UserDegree::create(
+                    [
+                        'user_id' => auth()->id(),
+                        'degree_id' => $degree->id
+                    ]
+                );
+                $degree_progress->delete();
+            }
 
             $this->emit('updateSidebar');
         }

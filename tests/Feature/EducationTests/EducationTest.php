@@ -56,8 +56,10 @@ class EducationTest extends TestCase
 
         //Set degree cost to 0 and user money to +1 cost 
         //so user always has enough to pass
+        //Also set progress_needed to out of possible range
         $degree = Degree::where('id', $degree_progress->degree_id)->first();
         $degree->cost = 0;
+        $degree->progress_needed = 10000;
         $degree->save();
         $this->user->money = $degree->cost + 1;
         $this->user->save();
@@ -224,5 +226,58 @@ class EducationTest extends TestCase
 
         $response
         ->assertSee('Oops! It looks like you don\'t have enough money');
+    }
+
+    /**
+     * Ensure that when progress exceeds needed_progress
+     * UserDegrees & DegreeProgress are updated appropriatly
+     * 
+     * @return void 
+     */
+    public function test_matching_or_exceeding_progress_threshold_gives_user_degree() 
+    {
+  
+        $current_progress = 10;
+        $current_money = 1000;
+        $current_energy = 20;
+
+        $this->user->money = $current_money;
+        $this->user->current_energy = $current_energy;
+        $this->user->save();
+
+        $degree = $this->degrees[rand(0, $this->num_degrees - 1)];
+        $degree->progress_needed = 10;
+        $degree->save();
+
+        $degree_progress = DegreeProgress::create(
+            [
+                'user_id' => $this->user->id,
+                'degree_id' => $degree->id,
+                'progress' => $current_progress
+            ]
+        );
+
+        $response = Livewire::test('study')
+            ->call('makeProgress', $degree_progress->id);
+
+        
+        $this->assertDatabaseHas(
+            'user_degrees',
+            [
+                'user_id' => $this->user->id,
+                'degree_id' => $degree->id
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'degree_progress',
+            [
+                'user_id' => $this->user->id,
+                'degree_id' => $degree->id
+            ]
+        );
+
+        $response
+        ->assertSee('Completed Degrees');
     }
 }
