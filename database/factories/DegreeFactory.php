@@ -24,6 +24,7 @@ class DegreeFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->bs(),
+            'cost' => rand(100,500),
         ];
     }
 }

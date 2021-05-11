@@ -77,6 +77,36 @@ class EducationTest extends TestCase
     }
 
     /**
+     * Ensure that a user does NOT see a list of degrees
+     * that the user is already enrolled in
+     * @return void 
+     */
+    public function test_user_does_not_see_enrolled_degree_programs() 
+    {
+        $degrees = [];
+
+        for ($i = 1; $i<rand(2,$this->num_degrees-1); $i++)
+        {    
+            DegreeProgress::create(
+                [
+                    'user_id' => $this->user->id,
+                    'degree_id' => $this->degrees[$i]->id
+                ]
+            );
+
+            $degrees[] = $this->degrees[$i];
+        }
+
+        $response = Livewire::test('degrees');
+       
+        foreach ($degrees as $degree)
+        {
+            $response->assertDontSee($degree->title)
+            ->assertDontSee($degree->description);
+        }
+    }
+
+    /**
      * Ensure that a user enrolled in degree programs
      * can see list of programs enrolled in
      * @return void 
