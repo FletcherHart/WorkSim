@@ -139,34 +139,36 @@ class EducationTest extends TestCase
     }
 
     /**
-     * Ensure that a user enrolled in degree programs
-     * can see list of programs enrolled in
+     * Ensure that a user can study,
+     * which should increase progress
+     * toward degree relative to intelligence 
+     * 
      * @return void 
      */
     public function test_user_can_increase_progress_toward_degree() 
     {
-        $degrees = [];
+  
+        $current_progress = 10;
 
-        for ($i = 1; $i<rand(2,$this->num_degrees-1); $i++)
-        {    
-            DegreeProgress::create(
-                [
-                    'user_id' => $this->user->id,
-                    'degree_id' => $this->degrees[$i]->id
-                ]
-            );
+        $degree_progress = DegreeProgress::create(
+            [
+                'user_id' => $this->user->id,
+                'degree_id' => $this->degrees[rand(0, $this->num_degrees - 1)]->id,
+                'progress' => $current_progress
+            ]
+        );
 
-            $degrees[] = $this->degrees[$i];
-        }
+        $expected_progress = $current_progress + round(1 + ($this->user->intelligence/5));
 
         $response = Livewire::test('study')
-        ->assertViewIs('livewire.study');
-        
-        foreach ($degrees as $degree)
-        {
-            $response->assertSee($degree->title)
-            ->assertSee($degree->description)
-            ->assertSee($degree->cost);
-        }
+            ->call('makeProgress', $degree_progress->id);
+
+        $this->assertDatabaseHas(
+            'degree_progress',
+            [
+                'user_id' => $this->user->id,
+                'progress' => $expected_progress
+            ]
+        );
     }
 }
