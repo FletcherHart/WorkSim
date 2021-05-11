@@ -57,7 +57,7 @@ class EducationTest extends TestCase
      *
      * @return void 
      */
-    public function test_user_can_see_enroll_in_degree_program() 
+    public function test_user_can_enroll_in_degree_program() 
     {
         $degree = $this->degrees[rand(0,$this->num_degrees-1)];
 
