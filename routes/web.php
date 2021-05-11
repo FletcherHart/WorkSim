@@ -4,6 +4,7 @@ use App\Http\Livewire\Apply;
 use App\Http\Livewire\Degrees;
 use App\Http\Livewire\Employment;
 use App\Http\Livewire\Enroll;
+use App\Http\Livewire\Study;
 use App\Http\Livewire\Work;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/work', Work::class)->name
 Route::middleware(['auth:sanctum', 'verified'])->get('/employment', [Employment::class, 'render'])->name('employment');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/degrees', Degrees::class)->name('degrees');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/study', Study::class)->name('study');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/apply/{id}', Apply::class)->name('apply');
 
